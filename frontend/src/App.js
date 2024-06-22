@@ -2,27 +2,20 @@ import React, { useState } from 'react';
 import './App.css';
 import Sidebar from './components/Sidebar';
 import Conversation from './components/Conversation';
+import AgentSelection from './components/AgentSelection';
 
-const sampleConversations = [
-  {
-    title: 'Conversation 1',
-    messages: [
-      { sender: 'User', text: 'Hello!' },
-      { sender: 'Bot', text: 'Hi there!' },
-    ],
-  },
-  {
-    title: 'Conversation 2',
-    messages: [
-      { sender: 'User', text: 'How are you?' },
-      { sender: 'Bot', text: 'I am fine, thank you!' },
-    ],
-  },
+const sampleAgents = [
+  { name: 'Email Sender', id: '1' },
+  { name: 'Calendar Scheduler', id: '2' },
+  { name: 'Internet Browser', id: '3' },
 ];
+
+const sampleConversations = [];
 
 function App() {
   const [conversations, setConversations] = useState(sampleConversations);
-  const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
+  const [selectedConversationIndex, setSelectedConversationIndex] = useState(null);
+  const [selectedAgent, setSelectedAgent] = useState(null);
 
   const handleNewConversation = () => {
     const newConversation = {
@@ -44,6 +37,11 @@ function App() {
     setConversations(updatedConversations);
   };
 
+  const handleSelectAgent = (agent) => {
+    setSelectedAgent(agent);
+    handleNewConversation();
+  };
+
   return (
     <div className="flex h-screen">
       <Sidebar 
@@ -51,10 +49,14 @@ function App() {
         onSelectConversation={handleSelectConversation} 
         onNewConversation={handleNewConversation} 
       />
-      <Conversation 
-        conversation={conversations[selectedConversationIndex]} 
-        onAddMessage={handleAddMessage} 
-      />
+      {selectedConversationIndex !== null ? (
+        <Conversation 
+          conversation={conversations[selectedConversationIndex]} 
+          onAddMessage={handleAddMessage} 
+        />
+      ) : (
+        <AgentSelection agents={sampleAgents} onSelectAgent={handleSelectAgent} />
+      )}
     </div>
   );
 }
