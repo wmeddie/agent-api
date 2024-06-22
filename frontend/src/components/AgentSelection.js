@@ -11,7 +11,7 @@ const AgentSelection = ({ agents, onSelectAgent }) => {
             className="cursor-pointer p-4 bg-white mb-2 rounded shadow hover:bg-gray-100"
             onClick={() => onSelectAgent(agent)}
           >
-            {agent.name}
+            {agent.title}
           </li>
         ))}
       </ul>

@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Sidebar from './components/Sidebar';
 import Conversation from './components/Conversation';
 import AgentSelection from './components/AgentSelection';
 
-const sampleAgents = [
-  { name: 'Email Sender', id: '1' },
-  { name: 'Calendar Scheduler', id: '2' },
-  { name: 'Internet Browser', id: '3' },
-];
-
-const sampleConversations = [];
-
 function App() {
-  const [conversations, setConversations] = useState(sampleConversations);
+  const [conversations, setConversations] = useState([]);
   const [selectedConversationIndex, setSelectedConversationIndex] = useState(null);
   const [selectedAgent, setSelectedAgent] = useState(null);
+  const [agents, setAgents] = useState([]);
+
+  useEffect(() => {
+    fetch(`http://localhost:3001/agents`)
+      .then(response => response.json())
+      .then(data => setAgents(data));
+  }, []);
 
   const handleNewConversation = () => {
     const newConversation = {
@@ -55,7 +54,7 @@ function App() {
           onAddMessage={handleAddMessage} 
         />
       ) : (
-        <AgentSelection agents={sampleAgents} onSelectAgent={handleSelectAgent} />
+        <AgentSelection agents={agents} onSelectAgent={handleSelectAgent} />
       )}
     </div>
   );
