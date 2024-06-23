@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import Conversation from './components/Conversation';
 import AgentSelection from './components/AgentSelection';
+import AgentList from './components/AgentList'; // Import the new component
 
 function App() {
   const initialConversations = [
@@ -55,7 +56,7 @@ function App() {
         onAddMessage={(text) => handleAddMessage(0, text)} 
         className="w-1/4"
       />
-      <div className="w-1/2 h-full bg-gray-200"></div>
+      <AgentList /> {/* Use the new component */}
       <Conversation 
         conversation={conversations[1]} 
         onAddMessage={(text) => handleAddMessage(1, text)} 
