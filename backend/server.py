@@ -6,25 +6,11 @@ import argparse
 import asyncpg
 
 from actors import *
-
+from db import *
+from quart import Quart, websocket
 from dotenv import load_dotenv
 
 load_dotenv()
-
-from quart import Quart, websocket
-
-
-async def get_db():
-    import os
-    user = os.getenv("DB_USER")
-    password = os.getenv("DB_PASSWORD")
-    host = os.getenv("DB_HOST")
-    port = os.getenv("DB_PORT")
-    database = os.getenv("DB_DATABASE")
-
-    conn = await asyncpg.connect(f'postgresql://{user}:{password}@{host}:{port}/{database}')
-    return conn
-
 
 
 async def main(args):
@@ -111,4 +97,3 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Mind')
     loop = asyncio.get_event_loop()
     app = loop.run_until_complete(main(parser.parse_args()))
-    loop.run_forever()
