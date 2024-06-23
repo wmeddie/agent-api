@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Conversation = ({ conversation, onAddMessage }) => {
+const Conversation = ({ conversation, onAddMessage, className }) => {
   const [newMessage, setNewMessage] = useState('');
 
   const handleSendMessage = () => {
@@ -17,7 +17,7 @@ const Conversation = ({ conversation, onAddMessage }) => {
   };
 
   return (
-    <div className="w-3/4 h-full p-4 flex flex-col">
+    <div className={`h-full p-4 flex flex-col ${className}`}>
       <h2 className="text-2xl font-bold mb-4">{conversation.title}</h2>
       <div className="bg-gray-100 p-4 rounded-lg flex-grow overflow-y-auto">
         {conversation.messages.map((message, index) => (
