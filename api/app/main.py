@@ -4,7 +4,7 @@ import sys
 import os
 from dotenv import load_dotenv
 
-load_dotenv('../../.env')  # Adjust this path if needed to correctly point to your .env file
+load_dotenv('../.env')  # Adjust this path if needed to correctly point to your .env file
 
 # Adjust the path to ensure the parent directory is in sys.path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

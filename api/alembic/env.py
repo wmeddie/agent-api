@@ -27,7 +27,7 @@ fileConfig(config.config_file_name)
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 # Add your model's MetaData object here for 'autogenerate' support
-from config_api.app.models import Agent  # Replace 'myapp.models' with your actual module
+from api.app.models import Agent  # Replace 'myapp.models' with your actual module
 target_metadata = Agent.metadata
 
 # Overwrite sqlalchemy.url with DATABASE_URL from environment variables
