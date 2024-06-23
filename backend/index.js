@@ -7,27 +7,32 @@ const app = express();
 app.use(express.json());
 app.use(cors()); // Use cors middleware
 
-// Route to fetch all agents with their conversations
-app.get('/agents', async (req, res) => {
-  const agents = await prisma.agent.findMany({
-    include: {
-      conversations: true, // Include conversations in the result
-    },
-  });
-  res.json(agents);
+// New Agent Routes
+app.post('/agents/:agentId/conversations/:userId', async (req, res) => {
+  const { agentId, userId } = req.params;
+  const randomMessages = [
+    "How can I assist you today?",
+    "What can I do for you?",
+    "Is there anything you need help with?",
+    "How may I help you?",
+    "What do you need assistance with?"
+  ];
+  const randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
+  const message = {
+    role: `Agent${agentId}`,
+    text: randomMessage
+  };
+
+  // Simulate creating a conversation and appending a message
+  // In a real application, you would interact with your database here
+
+  res.status(200).json({ message, success: true });
 });
 
-// Route to fetch a specific conversation
-app.get('/conversations/:id', async (req, res) => {
-  const { id } = req.params;
-  const conversation = await prisma.conversation.findUnique({
-    where: { id: parseInt(id) },
-  });
-  if (conversation) {
-    res.json(conversation);
-  } else {
-    res.status(404).send('Conversation not found');
-  }
+// sanity check agents route
+app.get('/agents', async (req, res) => {
+  // success message
+  res.json(agents);
 });
 
 const server = app.listen(3001, () =>

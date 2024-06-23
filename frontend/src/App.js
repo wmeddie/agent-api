@@ -1,61 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
-import Sidebar from './components/Sidebar';
 import Conversation from './components/Conversation';
 import AgentSelection from './components/AgentSelection';
 
 function App() {
-  const [conversations, setConversations] = useState([]);
-  const [selectedConversationIndex, setSelectedConversationIndex] = useState(null);
-  const [selectedAgent, setSelectedAgent] = useState(null);
-  const [agents, setAgents] = useState([]);
+  const initialConversations = [
+    {
+      title: 'User 1',
+      messages: [
+        { sender: 'Agent', text: 'Hi there! How can I help you today?' },
+      ],
+    },
+    {
+      title: 'User 2',
+      messages: [
+        { sender: 'Agent', text: 'Sure, what do you need help with?' },
+      ],
+    },
+  ];
 
-  useEffect(() => {
-    fetch(`http://localhost:3001/agents`)
-      .then(response => response.json())
-      .then(data => setAgents(data));
-  }, []);
+  const [conversations, setConversations] = useState(initialConversations);
+  const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
 
-  const handleNewConversation = () => {
-    const newConversation = {
-      title: `Conversation ${conversations.length + 1}`,
-      messages: [],
-    };
-    setConversations([...conversations, newConversation]);
-    setSelectedConversationIndex(conversations.length);
-  };
-
-  const handleSelectConversation = (index) => {
-    setSelectedConversationIndex(index);
-  };
-
-  const handleAddMessage = (text) => {
+  const handleAddMessage = async (index, text) => {
     const newMessage = { sender: 'User', text };
     const updatedConversations = [...conversations];
-    updatedConversations[selectedConversationIndex].messages.push(newMessage);
+    updatedConversations[index].messages.push(newMessage);
     setConversations(updatedConversations);
-  };
 
-  const handleSelectAgent = (agent) => {
-    setSelectedAgent(agent);
-    handleNewConversation();
+    // Make a POST request to the backend
+    try {
+      const response = await fetch(`http://localhost:3001/agents/1/conversations/${index}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        const agentMessage = { sender: `Agent1`, text: data.message.text };
+        updatedConversations[index].messages.push(agentMessage);
+        setConversations([...updatedConversations]); // Ensure state is updated
+      }
+    } catch (error) {
+      console.error('Error adding message:', error);
+    }
   };
 
   return (
     <div className="flex h-screen">
-      <Sidebar 
-        conversations={conversations} 
-        onSelectConversation={handleSelectConversation} 
-        onNewConversation={handleNewConversation} 
+      <Conversation 
+        conversation={conversations[0]} 
+        onAddMessage={(text) => handleAddMessage(0, text)} 
       />
-      {selectedConversationIndex !== null ? (
-        <Conversation 
-          conversation={conversations[selectedConversationIndex]} 
-          onAddMessage={handleAddMessage} 
-        />
-      ) : (
-        <AgentSelection agents={agents} onSelectAgent={handleSelectAgent} />
-      )}
+      <div className="w-1/4 h-full bg-gray-200"></div>
+      <Conversation 
+        conversation={conversations[1]} 
+        onAddMessage={(text) => handleAddMessage(1, text)} 
+      />
     </div>
   );
 }
