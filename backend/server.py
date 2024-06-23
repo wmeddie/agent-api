@@ -1,13 +1,8 @@
-import asyncio
-from urllib import request
-
-import ray
 import argparse
-import asyncpg
 
 from actors import *
 from db import *
-from quart import Quart, websocket
+from quart import Quart, websocket, request, jsonify
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -49,7 +44,7 @@ async def main(args):
                 data["model"]
             )
             # Return inserted id.
-            return res, 200
+            return jsonify({"id": res})
         finally:
             await conn.close()
 
@@ -62,7 +57,10 @@ async def main(args):
                 'SELECT name, description, instructions, model FROM agents'
             )
 
-            return res, 200
+            return jsonify({
+                "agents": [dict(a) for a in res]
+            })
+
         finally:
             await conn.close()
 
