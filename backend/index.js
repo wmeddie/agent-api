@@ -31,8 +31,12 @@ app.post('/agents/:agentId/conversations/:userId', async (req, res) => {
 
 // sanity check agents route
 app.get('/agents', async (req, res) => {
-  // success message
-  res.json(agents);
+    // return an array of static data
+    res.json([
+        { id: 1, name: 'Email Sender' },
+        { id: 2, name: 'Calendar Scheduler' },
+        { id: 3, name: 'Internet Search' },
+    ]);
 });
 
 const server = app.listen(3001, () =>
